@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 using namespace std;
+//hello
 Complex Resistor::getImpedance(double freq, double temp) {
         //Add quantum affects and temp. dependence on material
 
