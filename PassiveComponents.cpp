@@ -2,12 +2,12 @@
 #include <vector>
 #include <string>
 #include <iostream>
+
 using namespace std;
-//hello
+
 Complex Resistor::getImpedance(double freq, double temp) {
         //Add quantum affects and temp. dependence on material
-
-        //Only affect real value of Z 
+         
         return Complex(value, 0.0);
 }
 

@@ -13,10 +13,10 @@ private:
     vector<Complex> vectorB;
     vector<Complex> nodeVoltagesX;
     
-    void buildMatrices(double freq, double temp);
 public:
     //consructor
     MNASolver(NetList& net);
+    void buildMatrices(double freq, double temp);
 
     //base function to solve
     void solve(double freq, double temp);

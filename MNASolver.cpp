@@ -15,7 +15,7 @@ void MNASolver::buildMatrices(double freq, double temp) {
         Complex y = 1.0/z;
         int i = comp -> getNode1(); //node 1 -> where current is from
         int j = comp -> getNode2(); // node 2 -> where current goes to
-        //don't want to add for grounf
+        //don't want to add for ground
         if( i != 0) {
             matrixA[i-1][j-1] +=y; // Diagonal entry for node i
         }
