@@ -9,6 +9,7 @@ protected:
     int node2;
     double value; // value of all components in there respectitive units;
 public: 
+    double pi = std::acos(-1.0);
     Component(string _name, int n1, int n2, double val): name(_name), node1(n1), node2(n2), value(val) {}
     virtual ~Component() = default;
     //Overrride in other components -> get each own Z to add up

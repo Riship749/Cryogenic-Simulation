@@ -3,11 +3,10 @@
 #include <algorithm>           // For std::max
 using namespace std;
 
-void NetList::addResistor(std::string name, int n1, int n2, double resistance) {
-
-    components.push_back(std::make_shared<Resistor>(name, n1, n2, resistance));
-
-
+void NetList::addResistor(std::string name, int n1, int n2, double resistance, MaterialProfile mat) {
+    auto r = std::make_shared<Resistor>(name, n1, n2, resistance);
+    if (mat.isDefined) r->setMaterial(mat);
+    components.push_back(r);
     numNodes = std::max({numNodes, n1, n2});
 }
 

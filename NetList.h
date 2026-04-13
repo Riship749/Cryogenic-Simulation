@@ -10,10 +10,10 @@ private:
     //vector of components 
     vector<shared_ptr<Component>> components;
     //number nodes
-    int numNodes;
+    int numNodes = 0;
 public: 
     //implement later
-    void addResistor(string name, int n1, int n2, double resistance);
+    void addResistor(string name, int n1, int n2, double resistance, MaterialProfile mat = MaterialProfile());
     void addCapacitor(string name, int n1, int n2, double capacitance);
 
     //return total number of unique nodes to the size of the MNA results

@@ -17,9 +17,8 @@ public:
     //consructor
     MNASolver(NetList& net);
     void buildMatrices(double freq, double temp);
-
     //base function to solve
-    void solve(double freq, double temp);
+    vector<Complex> solve(double freq, double temp);
     Complex getNodeVoltage(int node) const;
 
 };
