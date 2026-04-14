@@ -36,7 +36,7 @@ double Resistor::resistanceAtTemperature(double temp) const {
     return R;
 }
 
-Complex Resistor::getImpedance(double freq, double temp) {
+Complex Resistor::getImpedance(double freq, double temp) const {
         //Add quantum affects and temp. dependence on material
         if (freq < 0.0)
                 throw std::invalid_argument("Frequency must be >= 0.");
@@ -72,7 +72,6 @@ Complex Resistor::getImpedance(double freq, double temp) {
         Complex Ytotal = (1.0 / Zseries) + Complex(0.0, omega * selfCapacitance);
         return 1.0 / Ytotal;
         }
-}
 
 // Computes the quantum voltage noise power spectral density.
 double Resistor::quantumVoltageNoisePSD(double freq, double temp) const {
