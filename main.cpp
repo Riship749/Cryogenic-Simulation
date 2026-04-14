@@ -4,18 +4,32 @@
 #include "MNASolver.h"
 #include "DataLogger.h"
 #include "PassiveComponents.h"
-
+   
+   
+   
 int main() {
     std::cout << "Initializing 60GHz AC Sweep Simulation..." << std::endl;
 
     // 1. Build the Circuit
     NetList circuit;
     
-    // Create a parallel RC circuit (acts as a low-pass filter)
-    // 50 Ohms resistance
-    circuit.addResistor("R1", 1, 0, 50.0); 
-    // 0.05 picoFarads capacitance
-    circuit.addCapacitor("C1", 1, 0, 0.05e-12); 
+    // Add parallel capacitor
+    //circuit.addCapacitor("C1", 1, 0, 0.05e-12); 
+
+    // Physical parameters for the traces
+    double length = 100.0e-6;
+    double width  = 2.0e-6;
+    double thickness = 500.0e-9;
+    
+    // Quantum specific parameters
+    double gap_distance = 50.0e-9;         // 50nm gap
+    double electron_wavelength = 10.0e-9;  // Arbitrary wave parameter for testing
+
+    // Add our new Quantum Wrapper (using Aluminum for both sides of the gap)
+    circuit.addQuantumResistor("R_QuantumTrace", 1, 0, 
+                               MaterialLibrary::Steel(), length, width, thickness,
+                               MaterialLibrary::Steel(), length, width, thickness,
+                               gap_distance, electron_wavelength);
 
     MNASolver solver(circuit);
 
@@ -26,29 +40,32 @@ int main() {
     double stepSize  = (stopFreq - startFreq) / numPoints;
 
     std::vector<double> frequencies;
-    std::vector<std::vector<Complex>> sweepResults;
+    std::vector<std::vector<Complex>> classicalSweep;
+    std::vector<std::vector<Complex>> quantumSweep;
 
     // 3. Run the Sweep
     std::cout << "Solving matrices..." << std::endl;
-    std::cout << "Nodes detected: " << circuit.getNodeCount() << std::endl; // <-- ADD THIS
+    std::cout << "Nodes detected: " << circuit.getNodeCount() << std::endl; 
+    
     for (int i = 0; i <= numPoints; ++i) {
         double currentFreq = startFreq + (i * stepSize);
         frequencies.push_back(currentFreq);
 
-        // Solve the circuit at 2.0 Kelvin
-        std::vector<Complex> voltages = solver.solve(currentFreq, 2.0);
-
-        if(voltages.empty()) {
-        std::cerr << "Error, 0 voltage at freq: " << currentFreq << std::endl;
+        // --- Classical Run (300 Kelvin) ---
+        std::vector<Complex> volt_class = solver.solve(currentFreq, 300.0);
+        if(volt_class.empty()) {
+            std::cerr << "Error, 0 voltage at freq (classical): " << currentFreq << std::endl;
         }
-        
-    sweepResults.push_back(voltages);
+        classicalSweep.push_back(volt_class);
 
+        // --- Quantum Run (1.2 Kelvin) ---
+        std::vector<Complex> volt_quant = solver.solve(currentFreq, 1.2);
+        quantumSweep.push_back(volt_quant);
     }
 
     // 4. Export the Data
     std::string outputFile = "ac_sweep_results.csv";
-    DataLogger::exportToCSV(outputFile, frequencies, sweepResults);
+    DataLogger::exportToCSV(outputFile, frequencies, classicalSweep, quantumSweep);
 
     std::cout << "Simulation complete. Data saved to " << outputFile << std::endl;
 
